@@ -46,3 +46,36 @@ test('check if amount is present on invoice page', async ({ page }) => {
   // const searchInput = page.locator('input[type="search"][role="combobox"]#rc_select_8');
   // await searchInput.click();
 });
+test('test if there is a "Download Recent Invoices" button', async ({ page }) => {
+  // Perform login
+  await login(page);
+
+  // Navigate to the customer page
+  await page.goto('http://localhost:3000');
+
+  // Assert that the "Download Recent Invoices" button is present
+  const downloadButton = page.locator('button:has-text("Download Recent Invoices")');
+  await expect(downloadButton).toBeVisible();
+
+  // Click the "Download Recent Invoices" button
+  await downloadButton.click();
+
+  // Optionally, add further checks for what happens after the click
+  // Example: Check if a download or popup occurs
+});
+test('test if designation field was added to client', async ({ page }) => {
+  // Perform login
+  await login(page);
+
+  // Navigate to the customer page
+  await page.goto('http://localhost:3000/customer');
+
+  // Click on the "Add New Client" button
+  await page.click('button:has-text("Add New Client")');
+
+  // Locate the correct Designation field
+  const designationField = page.locator('form', { hasText: 'NameCountryAddressPhoneEmailDesignationSubmit' }).locator('#designation');
+
+  // Verify the field is visible
+  await expect(designationField).toBeVisible();
+});
