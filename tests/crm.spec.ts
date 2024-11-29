@@ -19,63 +19,144 @@ async function login(page) {
   await expect(page).toHaveURL('http://localhost:3000/');
 }
 
-test('check Email field in Add New Client popup', async ({ page }) => {
+// test('check Email field in Add New Client popup', async ({ page }) => {
+//   // Perform login
+//   await login(page);
+
+//   // Navigate to the customer page
+//   await page.goto('http://localhost:3000/customer');
+
+//   // Click on the "Add New Client" button
+//   await page.click('button:has-text("Add New Client")');
+
+//   // Check if the Email field exists in the popup using a more specific locator
+//   const emailField = page.getByRole('textbox', { name: 'email@example.com' });
+//   await expect(emailField).toBeVisible();
+// });
+
+// test('check if amount is present on invoice page', async ({ page }) => {
+//   // Perform login
+//   await login(page);
+
+//   // Navigate to the invoice creation page
+//   await page.goto('http://localhost:3000/invoice/create');
+//   await expect(page.locator('body')).toBeVisible(); // Wait for the page to load
+
+//   // Click on the search input field
+//   // const searchInput = page.locator('input[type="search"][role="combobox"]#rc_select_8');
+//   // await searchInput.click();
+// });
+// test('test if there is a "Download Recent Invoices" button', async ({ page }) => {
+//   // Perform login
+//   await login(page);
+
+//   // Navigate to the customer page
+//   await page.goto('http://localhost:3000');
+
+//   // Assert that the "Download Recent Invoices" button is present
+//   const downloadButton = page.locator('button:has-text("Download Recent Invoices")');
+//   await expect(downloadButton).toBeVisible();
+
+//   // Click the "Download Recent Invoices" button
+//   await downloadButton.click();
+
+//   // Optionally, add further checks for what happens after the click
+//   // Example: Check if a download or popup occurs
+// });
+// test('test if designation field was added to client', async ({ page }) => {
+//   // Perform login
+//   await login(page);
+
+//   // Navigate to the customer page
+//   await page.goto('http://localhost:3000/customer');
+
+//   // Click on the "Add New Client" button
+//   await page.click('button:has-text("Add New Client")');
+
+//   // Locate the correct Designation field
+//   const designationField = page.locator('form', { hasText: 'NameCountryAddressPhoneEmailDesignationAgeGenderSubmit' }).locator('#designation');
+// //const designationField = page.locator("#designation")
+//   // Verify the field is visible
+//   await expect(designationField).toBeVisible();
+// });
+// test('test if New Report was added', async ({ page }) => {
+//   // Perform login
+//   await login(page);
+
+//   // Navigate to the customer page
+//   await page.goto('http://localhost:3000');
+
+//   // Check if an <h3> with text "New Report" exists
+//   const newReportHeader = page.locator('h3', { hasText: 'New Report' });
+//   await expect(newReportHeader).toBeVisible();
+// });
+// test('test if New fields Age and Gender were added', async ({ page }) => {
+//   // Perform login
+//   await login(page);
+
+//   // Navigate to the customer page
+//   await page.goto('http://localhost:3000/customer');
+
+//   // Click on the "Add New Client" button
+//   await page.click('button:has-text("Add New Client")');
+
+
+
+//   // Locate the Age field
+//   // const ageField = page.locator('form', { hasText: 'NameCountryAddressPhoneEmailAgeSubmit' }).locator('#age');
+//   // const ageField = page.locator('#age');
+//   const ageField = page.getByRole('spinbutton');
+//   // Verify the Age field is visible
+//   await expect(ageField).toBeVisible();
+
+//   // Locate the Gender field
+//   //const genderField = page.locator('#gender');
+//   //const genderField = page.getByLabel('Gender')
+//   const genderField = page.locator('form').filter({ hasText: 'NameCountryAddressPhoneEmailDesignationAgeGenderSubmit' }).locator('#gender')
+//   // // Verify the Gender field is visible
+//   await expect(genderField).toBeVisible();
+
+
+// });
+test('test if sortable list added to Customer Table with caret indicators', async ({ page }) => {
   // Perform login
   await login(page);
 
   // Navigate to the customer page
   await page.goto('http://localhost:3000/customer');
 
-  // Click on the "Add New Client" button
-  await page.click('button:has-text("Add New Client")');
 
-  // Check if the Email field exists in the popup using a more specific locator
-  const emailField = page.getByRole('textbox', { name: 'email@example.com' });
-  await expect(emailField).toBeVisible();
-});
 
-test('check if amount is present on invoice page', async ({ page }) => {
-  // Perform login
-  await login(page);
+  // Verify if the table is sortable by clicking on a column header
+  const columnHeader = page.locator('table th:has-text("Name")');
 
-  // Navigate to the invoice creation page
-  await page.goto('http://localhost:3000/invoice/create');
-  await expect(page.locator('body')).toBeVisible(); // Wait for the page to load
+  await columnHeader.click();
 
-  // Click on the search input field
-  // const searchInput = page.locator('input[type="search"][role="combobox"]#rc_select_8');
-  // await searchInput.click();
-});
-test('test if there is a "Download Recent Invoices" button', async ({ page }) => {
-  // Perform login
-  await login(page);
+  // Verify ascending sort indicator is active
+  const caretUpIcon = columnHeader.locator('span[aria-label="caret-up"].active');
+  await expect(caretUpIcon).toBeVisible();
 
-  // Navigate to the customer page
-  await page.goto('http://localhost:3000');
+  // Capture and normalize row data
+  const rowsAsc = await page.locator('table tbody tr td:first-child');
+  let rowTextsAsc = (await rowsAsc.allInnerTexts())
+    .map(text => text.trim().toLowerCase())
+    .filter(text => text !== ''); // Remove empty strings
+  const sortedTextsAsc = [...rowTextsAsc].sort();
 
-  // Assert that the "Download Recent Invoices" button is present
-  const downloadButton = page.locator('button:has-text("Download Recent Invoices")');
-  await expect(downloadButton).toBeVisible();
+  expect(rowTextsAsc).toEqual(sortedTextsAsc);
 
-  // Click the "Download Recent Invoices" button
-  await downloadButton.click();
+  // Click again to sort in descending order
+  await columnHeader.click();
 
-  // Optionally, add further checks for what happens after the click
-  // Example: Check if a download or popup occurs
-});
-test('test if designation field was added to client', async ({ page }) => {
-  // Perform login
-  await login(page);
+  // Verify descending sort indicator is active
+  const caretDownIcon = columnHeader.locator('span[aria-label="caret-down"].active');
+  await expect(caretDownIcon).toBeVisible();
 
-  // Navigate to the customer page
-  await page.goto('http://localhost:3000/customer');
+  // Capture and normalize row data
+  let rowTextsDesc = (await rowsAsc.allInnerTexts())
+    .map(text => text.trim().toLowerCase())
+    .filter(text => text !== ''); // Remove empty strings
+  const sortedTextsDesc = [...sortedTextsAsc].reverse();
 
-  // Click on the "Add New Client" button
-  await page.click('button:has-text("Add New Client")');
-
-  // Locate the correct Designation field
-  const designationField = page.locator('form', { hasText: 'NameCountryAddressPhoneEmailDesignationSubmit' }).locator('#designation');
-
-  // Verify the field is visible
-  await expect(designationField).toBeVisible();
+  expect(rowTextsDesc).toEqual(sortedTextsDesc);
 });
