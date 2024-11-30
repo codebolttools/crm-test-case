@@ -160,3 +160,29 @@ test('test if sortable list added to Customer Table with caret indicators', asyn
 
   expect(rowTextsDesc).toEqual(sortedTextsDesc);
 });
+test('test if New Summarycard were added at home page', async ({ page }) => {
+  // Perform login
+  await login(page);
+
+  // Navigate to the customer page
+  await page.goto('http://localhost:3000');
+
+  // Check if an <h3> with text "New Report" exists
+  const newReportHeader = page.locator('h3', { hasText: 'Clients' });
+  const newPaymentHeader = page.locator('h3', { hasText: 'Payments' });
+  await expect(newReportHeader).toBeVisible();
+  await expect(newPaymentHeader).toBeVisible();
+});
+test('check if charts are added to the page', async ({ page }) => {
+  // Perform login
+  await login(page);
+
+  // Navigate to the page containing the chart
+  await page.goto('http://localhost:3000');
+
+  // Wait for the chart to be rendered
+  const chartContainer = page.locator('.recharts-responsive-container');
+  await expect(chartContainer).toBeVisible();
+
+  
+});
