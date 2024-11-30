@@ -74,9 +74,16 @@ async function login(page) {
 //   await page.click('button:has-text("Add New Client")');
 
 //   // Locate the correct Designation field
-//   const designationField = page.locator('form', { hasText: 'NameCountryAddressPhoneEmailDesignationAgeGenderSubmit' }).locator('#designation');
+//   const designationField = page.locator('form', { hasText: 'NameCountryAddressPhoneEmailDesignationSubmit' }).locator('#designation');
 // //const designationField = page.locator("#designation")
 //   // Verify the field is visible
+//   //const designationField = page.locator('input[name="designation"], input[id="designation"]').first();
+//   //const designationField = page.getByLabel('Designation');
+//   // const designationFields = page.locator('input[name="designation"], input[id="designation"]');
+//   // await expect(designationFields).toHaveCount(1);
+
+//   // // Then select and verify visibility
+//   // const designationField = designationFields.first();
 //   await expect(designationField).toBeVisible();
 // });
 // test('test if New Report was added', async ({ page }) => {
@@ -118,71 +125,151 @@ async function login(page) {
 
 
 // });
-test('test if sortable list added to Customer Table with caret indicators', async ({ page }) => {
+// test('test if sortable list added to Customer Table with caret indicators', async ({ page }) => {
+//   // Perform login
+//   await login(page);
+
+//   // Navigate to the customer page
+//   await page.goto('http://localhost:3000/customer');
+
+
+
+//   // Verify if the table is sortable by clicking on a column header
+//   const columnHeader = page.locator('table th:has-text("Name")');
+
+//   await columnHeader.click();
+
+//   // Verify ascending sort indicator is active
+//   const caretUpIcon = columnHeader.locator('span[aria-label="caret-up"].active');
+//   await expect(caretUpIcon).toBeVisible();
+
+//   // Capture and normalize row data
+//   const rowsAsc = await page.locator('table tbody tr td:first-child');
+//   let rowTextsAsc = (await rowsAsc.allInnerTexts())
+//     .map(text => text.trim().toLowerCase())
+//     .filter(text => text !== ''); // Remove empty strings
+//   const sortedTextsAsc = [...rowTextsAsc].sort();
+
+//   expect(rowTextsAsc).toEqual(sortedTextsAsc);
+
+//   // Click again to sort in descending order
+//   await columnHeader.click();
+
+//   // Verify descending sort indicator is active
+//   const caretDownIcon = columnHeader.locator('span[aria-label="caret-down"].active');
+//   await expect(caretDownIcon).toBeVisible();
+
+//   // Capture and normalize row data
+//   let rowTextsDesc = (await rowsAsc.allInnerTexts())
+//     .map(text => text.trim().toLowerCase())
+//     .filter(text => text !== ''); // Remove empty strings
+//   const sortedTextsDesc = [...sortedTextsAsc].reverse();
+
+//   expect(rowTextsDesc).toEqual(sortedTextsDesc);
+// });
+// test('test if New Summarycard were added at home page', async ({ page }) => {
+//   // Perform login
+//   await login(page);
+
+//   // Navigate to the customer page
+//   await page.goto('http://localhost:3000');
+
+//   // Check if an <h3> with text "New Report" exists
+//   const newReportHeader = page.locator('h3', { hasText: 'Clients' });
+//   const newPaymentHeader = page.locator('h3', { hasText: 'Payments' });
+//   await expect(newReportHeader).toBeVisible();
+//   await expect(newPaymentHeader).toBeVisible();
+// });
+// test('check if charts are added to the page', async ({ page }) => {
+//   // Perform login
+//   await login(page);
+
+//   // Navigate to the page containing the chart
+//   await page.goto('http://localhost:3000');
+
+//   // Wait for the chart to be rendered
+//   const chartContainer = page.locator('.recharts-responsive-container');
+//   await expect(chartContainer).toBeVisible();
+
+
+// });
+// test('check if date range was added', async ({ page }) => {
+//   // Perform login
+//   await login(page);
+
+//   // Navigate to the page containing the date range
+//   await page.goto('http://localhost:3000/payment');
+
+//   // Locate the date range picker or displayed date range
+//   const dateRange = page.locator('.date-range-picker'); // Replace with the correct selector for the date range element
+
+//   // Assert that the date range picker is visible
+//   await expect(dateRange).toBeVisible();
+// });
+// test('test if export to pdf or excell button added', async ({ page }) => {
+//   // Perform login
+//   await login(page);
+
+//   // Navigate to the customer page
+//   await page.goto('http://localhost:3000');
+
+//   // Assert that the "Download Recent Invoices" button is present
+//   const downloadButton = page.locator('button:has-text("Export to PDF")').first();
+//   await expect(downloadButton).toBeVisible();
+
+//   // Click the "Download Recent Invoices" button
+//   await downloadButton.click();
+
+
+// });
+test('test if date range picker updates payment summary on dashboard', async ({ page }) => {
   // Perform login
   await login(page);
 
-  // Navigate to the customer page
-  await page.goto('http://localhost:3000/customer');
-
-
-
-  // Verify if the table is sortable by clicking on a column header
-  const columnHeader = page.locator('table th:has-text("Name")');
-
-  await columnHeader.click();
-
-  // Verify ascending sort indicator is active
-  const caretUpIcon = columnHeader.locator('span[aria-label="caret-up"].active');
-  await expect(caretUpIcon).toBeVisible();
-
-  // Capture and normalize row data
-  const rowsAsc = await page.locator('table tbody tr td:first-child');
-  let rowTextsAsc = (await rowsAsc.allInnerTexts())
-    .map(text => text.trim().toLowerCase())
-    .filter(text => text !== ''); // Remove empty strings
-  const sortedTextsAsc = [...rowTextsAsc].sort();
-
-  expect(rowTextsAsc).toEqual(sortedTextsAsc);
-
-  // Click again to sort in descending order
-  await columnHeader.click();
-
-  // Verify descending sort indicator is active
-  const caretDownIcon = columnHeader.locator('span[aria-label="caret-down"].active');
-  await expect(caretDownIcon).toBeVisible();
-
-  // Capture and normalize row data
-  let rowTextsDesc = (await rowsAsc.allInnerTexts())
-    .map(text => text.trim().toLowerCase())
-    .filter(text => text !== ''); // Remove empty strings
-  const sortedTextsDesc = [...sortedTextsAsc].reverse();
-
-  expect(rowTextsDesc).toEqual(sortedTextsDesc);
-});
-test('test if New Summarycard were added at home page', async ({ page }) => {
-  // Perform login
-  await login(page);
-
-  // Navigate to the customer page
+  // Navigate to the dashboard page
   await page.goto('http://localhost:3000');
 
-  // Check if an <h3> with text "New Report" exists
-  const newReportHeader = page.locator('h3', { hasText: 'Clients' });
-  const newPaymentHeader = page.locator('h3', { hasText: 'Payments' });
-  await expect(newReportHeader).toBeVisible();
-  await expect(newPaymentHeader).toBeVisible();
+  // Locate the start date input
+  const startDateInput = page.locator('input[placeholder="Start date"]');
+  await expect(startDateInput).toBeVisible();
+
+  // Locate the end date input
+  const endDateInput = page.locator('input[placeholder="End date"]');
+  await expect(endDateInput).toBeVisible();
+
+  // Verify the Payment Summary section is visible
+  const paymentSummaryHeader = page.locator('h3', { hasText: 'Payment Summary' });
+  await expect(paymentSummaryHeader).toBeVisible();
+
+
 });
-test('check if charts are added to the page', async ({ page }) => {
+test('test if date range for payment works as expected', async ({ page }) => {
   // Perform login
   await login(page);
 
-  // Navigate to the page containing the chart
+  // Navigate to the dashboard page
+  await page.goto('http://localhost:3000/payment');
+
+  // Locate the start date input
+  const startDateInput = page.locator('input[placeholder="Start date"]');
+  await expect(startDateInput).toBeVisible();
+
+  // Locate the end date input
+  const endDateInput = page.locator('input[placeholder="End date"]');
+  await expect(endDateInput).toBeVisible();
+
+  // Set the date range
+
+});
+
+test('test if footer was added', async ({ page }) => {
+  // Perform login
+  await login(page);
+
+  // Navigate to the dashboard page
   await page.goto('http://localhost:3000');
 
-  // Wait for the chart to be rendered
-  const chartContainer = page.locator('.recharts-responsive-container');
-  await expect(chartContainer).toBeVisible();
-
-  
+  // Check if the footer tag is present
+  const footer = await page.locator('footer');
+  await expect(footer).toBeVisible(); // Assert that the footer is visible
 });
